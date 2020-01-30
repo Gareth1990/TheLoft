@@ -32,7 +32,7 @@ class Item(Resource):
         #we deal with errors then Whatever we need next
         data  = Item.parser.parse_args()
 
-        item = ItemModel(name, data['price'], data['store_id'])
+        item = ItemModel(name, **data)
 
         try:
             item.save_to_db()
@@ -43,7 +43,6 @@ class Item(Resource):
 
     @jwt_required()
     def delete(self, name):
-
         item  = ItemModel.find_by_name(name)
         if item:
             item.delete_from_db()
@@ -55,8 +54,7 @@ class Item(Resource):
         item = ItemModel.find_by_name(name)
 
         if item is None:
-            item = ItemModel(name, data['price'], data['store_id'])
-
+             item = ItemModel(name, **data)
         else:
             item.price = data['price']
 
